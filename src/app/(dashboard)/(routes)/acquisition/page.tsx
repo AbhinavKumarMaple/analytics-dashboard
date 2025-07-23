@@ -23,6 +23,12 @@ interface ApiProperty {
   "Homesite Sq.Ft.": string;
 }
 
+// Define interface for coordinates
+interface Coordinate {
+  lat: number;
+  lng: number;
+}
+
 // Define interface for filter options
 interface FilterOptions {
   uniqueValues: Record<string, string[]>;
@@ -110,6 +116,7 @@ const PropertyMapSection = dynamic(() => import("@/components/map/property-map-s
 export default function AcquisitionPage() {
   const [apiProperties, setApiProperties] = useState<ApiProperty[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
+  const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingFilters, setIsLoadingFilters] = useState(true);
   const [filterOptions, setFilterOptions] = useState<FilterOptions>({
@@ -230,7 +237,7 @@ export default function AcquisitionPage() {
     fetchProperties(1, queryParams.toString());
   };
 
-  // Modified fetchProperties to accept query string
+  // Modified fetchProperties to accept query string and handle coordinates
   const fetchProperties = async (page = 1, queryString?: string) => {
     try {
       setIsLoading(true);
@@ -247,6 +254,11 @@ export default function AcquisitionPage() {
       // Store the API properties
       const apiProps = data.data || [];
       setApiProperties(apiProps);
+
+      // Store the coordinates from all filtered properties
+      if (data.coordinates && Array.isArray(data.coordinates)) {
+        setCoordinates(data.coordinates);
+      }
 
       // Transform API properties to match the Property type for the map
       const transformedProperties = apiProps.map((prop: ApiProperty) => ({
@@ -361,7 +373,7 @@ export default function AcquisitionPage() {
               <Skeleton className="h-full w-full rounded-b-lg" />
             </div>
           ) : (
-            <PropertyMapSection initialProperties={properties} />
+            <PropertyMapSection initialProperties={properties} allCoordinates={coordinates} />
           )}
         </CardContent>
       </Card>

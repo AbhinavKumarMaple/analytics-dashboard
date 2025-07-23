@@ -242,6 +242,17 @@ function filterProperties(properties: Property[], filters: Record<string, string
   });
 }
 
+// Function to extract coordinates from properties
+function extractCoordinates(properties: Property[]): Array<{ lat: number; lng: number }> {
+  return properties
+    .filter((prop) => prop.Latitude && prop.Longitude)
+    .map((prop) => ({
+      lat: parseFloat(prop.Latitude),
+      lng: parseFloat(prop.Longitude),
+    }))
+    .filter((coord) => !isNaN(coord.lat) && !isNaN(coord.lng));
+}
+
 // Function to paginate results
 function paginateResults(
   data: Property[],
@@ -249,6 +260,7 @@ function paginateResults(
   pageSize: number
 ): {
   data: Property[];
+  coordinates: Array<{ lat: number; lng: number }>;
   pagination: {
     total: number;
     page: number;
@@ -260,8 +272,12 @@ function paginateResults(
   const endIndex = startIndex + pageSize;
   const paginatedData = data.slice(startIndex, endIndex);
 
+  // Extract coordinates only from the paginated data
+  const coordinates = extractCoordinates(paginatedData);
+
   return {
     data: paginatedData,
+    coordinates,
     pagination: {
       total: data.length,
       page,

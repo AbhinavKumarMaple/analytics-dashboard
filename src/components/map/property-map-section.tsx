@@ -21,12 +21,14 @@ interface PropertyMapSectionProps {
   initialProperties?: Property[];
   initialFilters?: FilterOptions;
   className?: string;
+  allCoordinates?: Array<{ lat: number; lng: number }>;
 }
 
 export default function PropertyMapSection({
   initialProperties = [],
   initialFilters,
   className = "",
+  allCoordinates = [],
 }: PropertyMapSectionProps) {
   const {
     properties,
@@ -55,8 +57,8 @@ export default function PropertyMapSection({
   }, [initialProperties]);
 
   return (
-    <div className={`grid grid-cols-1 gap-4 lg:grid-cols-4 ${className}`}>
-      <div className="lg:col-span-3">
+    <div className={`flex gap-4 ${className}`}>
+      <div className="flex-1">
         <PropertyMap
           properties={properties}
           onPropertyClick={handlePropertyClick}
@@ -64,9 +66,10 @@ export default function PropertyMapSection({
           filters={filters}
           height="600px"
           className="w-full"
+          allCoordinates={allCoordinates}
         />
       </div>
-      <div className="lg:col-span-1">
+      {/* <div className="lg:col-span-1">
         <MapControls
           filters={filters || {}}
           onFilterChange={updateFilters}
@@ -74,7 +77,7 @@ export default function PropertyMapSection({
           builders={builders}
           className="h-full"
         />
-      </div>
+      </div> */}
     </div>
   );
 }
