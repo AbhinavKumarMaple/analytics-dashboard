@@ -1,0 +1,58 @@
+{
+  "brands": [
+    {
+      "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+      "name": "KB HOME",
+      "logo": "/brands/kb-home.svg",
+      "backgroundColor": "#f59e0b",
+      "textColor": "#ffffff",
+      "url": "https://www.kbhome.com",
+      "description": "KB Home is one of the largest and most recognized homebuilders in the United States."
+    },
+    {
+      "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+      "name": "NVR",
+      "logo": "/brands/nvr.svg",
+      "backgroundColor": "#991b1b",
+      "textColor": "#ffffff",
+      "url": "https://www.nvrinc.com",
+      "description": "NVR, Inc. is one of America's leading homebuilders, operating in multiple states."
+    },
+    {
+      "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+      "name": "LENNAR",
+      "logo": "/brands/lennar.svg",
+      "backgroundColor": "#1e40af",
+      "textColor": "#ffffff",
+      "url": "https://www.lennar.com",
+      "description": "Lennar Corporation is a home construction and real estate company based in the United States."
+    },
+    {
+      "id": "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+      "name": "RICHMOND AMERICAN HOMES",
+      "logo": "/brands/richmond.svg",
+      "backgroundColor": "#dc2626",
+      "textColor": "#ffffff",
+      "url": "https://www.richmondamerican.com",
+      "description": "Richmond American Homes is a national homebuilder with operations in multiple markets."
+    },
+    {
+      "id": "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+      "name": "tri pointe HOMES",
+      "logo": "/brands/tripointe.svg",
+      "backgroundColor": "#ffffff",
+      "textColor": "#6b7280",
+      "url": "https://www.tripointehomes.com",
+      "description": "TRI Pointe Homes is a family of premium regional homebuilders."
+    },
+    {
+      "id": "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+      "name": "SMITH DOUGLAS HOMES",
+      "logo": "/brands/smith-douglas.svg",
+      "backgroundColor": "#ffffff",
+      "textColor": "#111827",
+      "url": "https://www.smithdouglas.com",
+      "description": "Smith Douglas Homes is a builder of new homes in the southeastern United States."
+    }
+  ]
+}

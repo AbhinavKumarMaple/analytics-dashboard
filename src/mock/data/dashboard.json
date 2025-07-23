@@ -1,0 +1,12 @@
+{
+  "metrics": {
+    "totalLots": 1781,
+    "activeLots": 1781,
+    "avgPricePerSqft": 207,
+    "totalSqftPlanned": 169580,
+    "salesPrice": 9999,
+    "priceIncrease": 9999,
+    "timeframe": "Jan 2025",
+    "lastUpdated": "2025-07-01T10:30:00Z"
+  }
+}

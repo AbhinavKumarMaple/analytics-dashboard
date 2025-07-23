@@ -1,0 +1,56 @@
+FULL STACK DEVELOPER – TASK
+This task is designed to assess your ability to replicate a complex data dashboard and build
+a complete full-stack web application. The outcome will demonstrate your capabilities in
+frontend and backend development, product thinking, and initiative. Please approach this as
+you would a real-world feature assignment.
+1. Overview
+You are expected to build a fully functional web application that replicates a Power BI
+dashboard, based on the wireframes we will provide. You may use any technology stack that
+best suits the problem, with the aim of delivering a clean, responsive, and user-friendly
+interface with dummy data.
+2. Objectives
+2.1 Dashboard Replication
+You will be provided with visual wireframes (screenshots) representing the desired UI
+layout and components. Your task is to closely replicate the layout, interaction, and styling
+using the frontend technology of your choice.
+2.2 Web Application Development
+Your solution must include the following:
+• Frontend Requirements:
+• - Dashboard UI replication as per wireframes
+• - Table with sortable/filterable dummy JSON data
+• - Static chatbot widget (no logic needed)
+• - Navigation (top bar or sidebar)
+• - Map feature with polygon drawing, dummy pins, and filtering
+• Backend Requirements:
+• - `/login` route with hardcoded authentication
+• - `/data` route to serve table and map data
+• - Optional: JWT/session authentication
+2.3 Personal Contribution Requirement – ( BONUS )
+You must include at least one additional feature or improvement that you believe will
+enhance the usability, performance, or value of the web application. This is your
+opportunity to showcase your product thinking and creativity.
+3. Deliverables
+Your final submission must include:
+• - GitHub repository with all source code (frontend + backend)
+• - Live frontend link (e.g., Vercel, Netlify)
+• - (Optional) Hosted backend link (e.g., Render, EC2, Railway)
+• - README file with the following:
+• - Tech stack used
+• - Setup instructions
+• - Explanation of your own added feature
+• - Challenges faced and how you resolved them
+• - (Optional) Screenshots or video walkthrough
+4. Evaluation Criteria
+You will be evaluated based on the following criteria:
+• - Code quality and architecture
+• - Accuracy in UI replication
+• - Creativity and value of added feature
+• - Product thinking and initiative
+• - Clean and deployable solution
+5. Timeline
+You will have five (5) days from the time of receiving the wireframes to submit your
+completed task. Late submissions will not be accepted.
+6. What We Will Provide
+• - Screenshots/wireframes of the target dashboard
+• - Dummy dataset
+For any clarifications or support requests, feel free to reach out to us.

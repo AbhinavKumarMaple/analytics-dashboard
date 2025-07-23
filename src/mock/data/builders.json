@@ -1,0 +1,64 @@
+{
+  "builders": [
+    {
+      "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+      "name": "Blue Velvet Group",
+      "logo": "/builders/blue-velvet.svg",
+      "brandColor": "#3b82f6",
+      "textColor": "#ffffff",
+      "website": "https://example.com/blue-velvet",
+      "properties": 45,
+      "activeLots": 12,
+      "totalSales": 33000000,
+      "avgPricePerSqft": 899
+    },
+    {
+      "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+      "name": "Mulholland Drive",
+      "logo": "/builders/mulholland.svg",
+      "brandColor": "#10b981",
+      "textColor": "#ffffff",
+      "website": "https://example.com/mulholland",
+      "properties": 38,
+      "activeLots": 15,
+      "totalSales": 28500000,
+      "avgPricePerSqft": 899
+    },
+    {
+      "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+      "name": "Sunset Boulevard",
+      "logo": "/builders/sunset.svg",
+      "brandColor": "#f59e0b",
+      "textColor": "#ffffff",
+      "website": "https://example.com/sunset",
+      "properties": 52,
+      "activeLots": 18,
+      "totalSales": 39000000,
+      "avgPricePerSqft": 899
+    },
+    {
+      "id": "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+      "name": "Lost Highway",
+      "logo": "/builders/lost-highway.svg",
+      "brandColor": "#8b5cf6",
+      "textColor": "#ffffff",
+      "website": "https://example.com/lost-highway",
+      "properties": 29,
+      "activeLots": 10,
+      "totalSales": 21750000,
+      "avgPricePerSqft": 899
+    },
+    {
+      "id": "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+      "name": "Inland Empire",
+      "logo": "/builders/inland-empire.svg",
+      "brandColor": "#ec4899",
+      "textColor": "#ffffff",
+      "website": "https://example.com/inland-empire",
+      "properties": 41,
+      "activeLots": 14,
+      "totalSales": 30750000,
+      "avgPricePerSqft": 899
+    }
+  ]
+}
