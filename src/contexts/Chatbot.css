@@ -3,8 +3,8 @@
   position: fixed;
   bottom: 20px;
   left: 20px;
-  background-color: #007bff;
-  color: white;
+  background-color: #007bff00;
+  /* color: rgb(0, 0, 0); */
   border: none;
   border-radius: 50%;
   width: 60px;
@@ -20,15 +20,15 @@
 }
 
 .dark .chatbot-button {
-  background-color: #3b82f6;
+  background-color: #3b83f600;
 }
 
 .chatbot-button:hover {
-  background-color: #0056b3;
+  background-color: #0057b33b;
 }
 
 .dark .chatbot-button:hover {
-  background-color: #2563eb;
+  background-color: #0057b33b;
 }
 
 /* Chatbot Window */

@@ -1,10 +1,11 @@
 import React from "react";
 import "../../contexts/Chatbot.css";
+import { BotIcon } from "lucide-react";
 
 const ChatbotButton = ({ onClick }: { onClick: () => void }) => {
   return (
     <button className="chatbot-button" onClick={onClick}>
-      <svg
+      {/* <svg
         width="32"
         height="32"
         viewBox="0 0 24 24"
@@ -37,7 +38,9 @@ const ChatbotButton = ({ onClick }: { onClick: () => void }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-      </svg>
+      </svg> */}
+      {/* bot-message-square */}
+      <BotIcon className="scale-150 text-black dark:text-white" />
     </button>
   );
 };

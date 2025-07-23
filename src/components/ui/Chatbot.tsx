@@ -22,7 +22,7 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="chatbot-container">
+    <div className="chatbot-container ">
       <ChatbotButton onClick={toggleChat} />
       {isOpen && (
         <ChatbotWindow onClose={toggleChat} messages={messages} setMessages={setMessages} />

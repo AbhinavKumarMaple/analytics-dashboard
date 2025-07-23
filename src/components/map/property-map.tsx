@@ -1,17 +1,15 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import dynamic from "next/dynamic";
 import { Property, FilterOptions } from "@/types";
-import L, { Icon, DivIcon, LatLngBounds, LatLng } from "leaflet";
+import L, { DivIcon, LatLngBounds } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
-import * as LDraw from "leaflet-draw";
+import "leaflet-draw";
 
 interface PropertyMapProps {
   properties: Property[];
   onPropertyClick?: (property: Property) => void;
-  onPolygonDraw?: (coordinates: LatLng[]) => void;
   filters?: FilterOptions;
   height?: string;
   className?: string;
@@ -25,7 +23,6 @@ export default function PropertyMap({
   enableDrawing = true,
   properties,
   onPropertyClick,
-  onPolygonDraw,
   filters,
   height = "600px",
   className = "",
@@ -191,7 +188,7 @@ export default function PropertyMap({
         drawnItemsRef.current = new L.FeatureGroup();
         mapInstanceRef.current.addLayer(drawnItemsRef.current);
 
-        const drawControl = new LDraw.Control.Draw({
+        const drawControl = new L.Control.Draw({
           draw: {
             polygon: true,
             marker: true,
@@ -217,14 +214,14 @@ export default function PropertyMap({
           });
         }
 
-        mapInstanceRef.current.on(LDraw.Draw.Event.CREATED, (e) => {
-          const layer = (e as LDraw.DrawEvents.Created).layer;
+        mapInstanceRef.current.on(L.Draw.Event.CREATED, (e) => {
+          const layer = (e as L.DrawEvents.Created).layer;
           drawnItemsRef.current?.addLayer(layer);
           saveDrawings();
         });
 
-        mapInstanceRef.current.on(LDraw.Draw.Event.EDITED, saveDrawings);
-        mapInstanceRef.current.on(LDraw.Draw.Event.DELETED, saveDrawings);
+        mapInstanceRef.current.on(L.Draw.Event.EDITED, saveDrawings);
+        mapInstanceRef.current.on(L.Draw.Event.DELETED, saveDrawings);
 
         const clearControl = L.control({ position: "topright" });
         clearControl.onAdd = () => {
@@ -356,7 +353,14 @@ export default function PropertyMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [filteredProperties, allCoordinates, onPropertyClick, groupColors]);
+  }, [
+    filteredProperties,
+    allCoordinates,
+    onPropertyClick,
+    groupColors,
+    enableDrawing,
+    getMarkerIcon,
+  ]);
 
   // Create legend component
   const Legend = () => {
