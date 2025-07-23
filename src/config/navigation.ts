@@ -49,10 +49,16 @@ export const navigationItems: NavigationItem[] = [
         // icon: Globe,
       },
       {
-        id: "urls",
+        id: "charts",
         label: "PowerBi Charts",
         href: "/charts",
-        // icon: Globe,
+        // icon: LineChart,
+      },
+      {
+        id: "properties",
+        label: "Properties",
+        href: "/properties",
+        // icon: Building,
       },
     ],
   },
