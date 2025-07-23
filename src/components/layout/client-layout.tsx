@@ -3,13 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { AuthProvider } from "@/contexts/auth-context";
 import LayoutProvider from "@/components/layout/layout-provider";
+import Chatbot from "@/components/ui/Chatbot";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
 }
 
 export default function ClientLayout({ children }: ClientLayoutProps) {
-  // This state prevents hydration mismatch by not rendering until client-side
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -29,7 +29,10 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
 
   return (
     <AuthProvider>
-      <LayoutProvider>{children}</LayoutProvider>
+      <LayoutProvider>
+        {children}
+        <Chatbot />
+      </LayoutProvider>
     </AuthProvider>
   );
 }
