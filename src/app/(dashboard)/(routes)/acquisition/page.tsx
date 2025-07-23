@@ -7,8 +7,7 @@ import { KPICard } from "@/components/ui/kpi-card";
 import dynamic from "next/dynamic";
 import { Property } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Select } from "@/components/ui/select";
-import { DollarSign, Home, Users, Ruler } from "lucide-react";
+import { DollarSign, Home, Users, Ruler, ChevronDown } from "lucide-react";
 
 // Define interface for API property data
 interface ApiProperty {
@@ -40,6 +39,62 @@ interface ActiveFilters {
   City?: string;
   State?: string;
   Zipcode?: string;
+}
+
+// FilterCard component for individual filter cards
+interface FilterCardProps {
+  title: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}
+
+function FilterCard({ title, value, options, onChange }: FilterCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  const handleSelect = (selectedValue: string) => {
+    onChange(selectedValue);
+    setIsOpen(false);
+  };
+
+  const displayValue = value || options[0]?.label || "All";
+
+  return (
+    <div className="relative">
+      <div
+        className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+        onClick={toggleDropdown}
+      >
+        <div className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">{title}</div>
+        <div className="flex items-center justify-between">
+          <div className="text-lg font-semibold text-gray-900 dark:text-white">{displayValue}</div>
+          <ChevronDown
+            className={`h-5 w-5 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+          />
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <div className="max-h-60 overflow-auto py-1">
+            {options.map((option) => (
+              <div
+                key={option.value}
+                className={`cursor-pointer px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  value === option.value ? "bg-gray-50 font-medium dark:bg-gray-700" : ""
+                }`}
+                onClick={() => handleSelect(option.value)}
+              >
+                {option.label}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Dynamically import the PropertyMapSection component to avoid SSR issues with Leaflet
@@ -311,9 +366,9 @@ export default function AcquisitionPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Filters</CardTitle>
+      <Card className="rounded-none border-none  bg-transparent">
+        <CardHeader className="pl-0">
+          <CardTitle className="">Filters</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoadingFilters ? (
@@ -325,12 +380,12 @@ export default function AcquisitionPage() {
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                 {/* MPC Filter */}
                 {filterOptions.uniqueValues.MPC && (
-                  <Select
-                    placeholder="MPC"
+                  <FilterCard
+                    title="MPC"
                     value={activeFilters.MPC || ""}
-                    onChange={(e) => handleFilterChange("MPC", e.target.value)}
+                    onChange={(value) => handleFilterChange("MPC", value)}
                     options={[
-                      { value: "all", label: "All MPCs" },
+                      { value: "all", label: "All" },
                       ...filterOptions.uniqueValues.MPC.map((value) => ({
                         value,
                         label: value,
@@ -341,12 +396,12 @@ export default function AcquisitionPage() {
 
                 {/* Community Filter */}
                 {filterOptions.uniqueValues.Community && (
-                  <Select
-                    placeholder="Community"
+                  <FilterCard
+                    title="Community"
                     value={activeFilters.Community || ""}
-                    onChange={(e) => handleFilterChange("Community", e.target.value)}
+                    onChange={(value) => handleFilterChange("Community", value)}
                     options={[
-                      { value: "all", label: "All Communities" },
+                      { value: "all", label: "All" },
                       ...filterOptions.uniqueValues.Community.map((value) => ({
                         value,
                         label: value,
@@ -357,12 +412,12 @@ export default function AcquisitionPage() {
 
                 {/* City Filter */}
                 {filterOptions.uniqueValues.City && (
-                  <Select
-                    placeholder="City"
+                  <FilterCard
+                    title="City"
                     value={activeFilters.City || ""}
-                    onChange={(e) => handleFilterChange("City", e.target.value)}
+                    onChange={(value) => handleFilterChange("City", value)}
                     options={[
-                      { value: "all", label: "All Cities" },
+                      { value: "all", label: "All" },
                       ...filterOptions.uniqueValues.City.map((value) => ({
                         value,
                         label: value,
@@ -373,12 +428,12 @@ export default function AcquisitionPage() {
 
                 {/* State Filter */}
                 {filterOptions.uniqueValues.State && (
-                  <Select
-                    placeholder="State"
+                  <FilterCard
+                    title="State"
                     value={activeFilters.State || ""}
-                    onChange={(e) => handleFilterChange("State", e.target.value)}
+                    onChange={(value) => handleFilterChange("State", value)}
                     options={[
-                      { value: "all", label: "All States" },
+                      { value: "all", label: "All" },
                       ...filterOptions.uniqueValues.State.map((value) => ({
                         value,
                         label: value,
@@ -389,12 +444,12 @@ export default function AcquisitionPage() {
 
                 {/* Zipcode Filter */}
                 {filterOptions.uniqueValues.Zipcode && (
-                  <Select
-                    placeholder="Zipcode"
+                  <FilterCard
+                    title="Zipcode"
                     value={activeFilters.Zipcode || ""}
-                    onChange={(e) => handleFilterChange("Zipcode", e.target.value)}
+                    onChange={(value) => handleFilterChange("Zipcode", value)}
                     options={[
-                      { value: "all", label: "All Zipcodes" },
+                      { value: "all", label: "All" },
                       ...filterOptions.uniqueValues.Zipcode.map((value) => ({
                         value,
                         label: value,
@@ -403,8 +458,6 @@ export default function AcquisitionPage() {
                   />
                 )}
               </div>
-
-              {/* Filter is applied automatically when selection changes */}
             </>
           )}
         </CardContent>

@@ -5,6 +5,10 @@ import { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { MoreHorizontal } from "lucide-react";
 
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  isShowOptions?: boolean; // optional, will default to true
+}
+
 const cardVariants = cva("rounded-[20px] bg-white border transition-all duration-200", {
   variants: {
     variant: {
@@ -33,8 +37,8 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = "Card";
 
-const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => {
+const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
+  ({ className, isShowOptions = true, ...props }, ref) => {
     const { children, ...rest } = props;
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
@@ -61,13 +65,15 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
       >
         {children}
         <div className="relative" ref={menuRef}>
-          <button
-            className="rounded-[20px] bg-[#F4F7FE] p-3 transition-colors dark:bg-gray-700"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Menu"
-          >
-            <MoreHorizontal className="text-[#4318ff] dark:text-gray-500" />
-          </button>
+          {isShowOptions ?? (
+            <button
+              className="rounded-[20px] bg-[#F4F7FE] p-3 transition-colors dark:bg-gray-700"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Menu"
+            >
+              <MoreHorizontal className="text-[#4318ff] dark:text-gray-500" />
+            </button>
+          )}
 
           {isMenuOpen && (
             <div className="absolute right-0 z-10 mt-1 w-48  border border-gray-200 bg-white shadow-lg">
