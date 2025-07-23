@@ -14,7 +14,9 @@ interface PropertyMapProps {
   filters?: FilterOptions;
   height?: string;
   className?: string;
-  allCoordinates?: Array<{ lat: number; lng: number }>;
+  allCoordinates?: Array<{ lat: number; lng: number; group?: string; groupType?: string }>;
+  groupBy?: "builder" | "city" | "state" | "status" | "MPC";
+  showLegend?: boolean;
 }
 
 export default function PropertyMap({
@@ -25,10 +27,42 @@ export default function PropertyMap({
   height = "600px",
   className = "",
   allCoordinates = [],
+  groupBy = "builder",
+  showLegend = true,
 }: PropertyMapProps) {
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(properties);
+  const [groupColors, setGroupColors] = useState<Record<string, string>>({});
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+
+  // Generate colors for groups
+  const generateGroupColors = (items: any[], groupByField: string) => {
+    const groups = Array.from(new Set(items.map((item) => item[groupByField] || "Unknown")));
+    const colors = [
+      "#8B5CF6",
+      "#F59E0B",
+      "#10B981",
+      "#EF4444",
+      "#3B82F6",
+      "#F97316",
+      "#84CC16",
+      "#EC4899",
+      "#6366F1",
+      "#14B8A6",
+      "#F43F5E",
+      "#8B5A2B",
+      "#6B7280",
+      "#7C3AED",
+      "#059669",
+    ];
+
+    const colorMap: Record<string, string> = {};
+    groups.forEach((group, index) => {
+      colorMap[group] = colors[index % colors.length];
+    });
+
+    return colorMap;
+  };
 
   // Apply filters when they change
   useEffect(() => {
@@ -51,14 +85,18 @@ export default function PropertyMap({
     }
 
     if (filters.priceRange) {
-      filtered = filtered.filter(
-        (p) => p.price >= filters.priceRange.min && p.price <= filters.priceRange.max
+      filtered = filtered.filter((p) =>
+        filters.priceRange
+          ? p.price >= filters.priceRange.min && p.price <= filters.priceRange.max
+          : true
       );
     }
 
     if (filters.sqftRange) {
-      filtered = filtered.filter(
-        (p) => p.sqft >= filters.sqftRange.min && p.sqft <= filters.sqftRange.max
+      filtered = filtered.filter((p) =>
+        filters.sqftRange
+          ? p.sqft >= filters.sqftRange.min && p.sqft <= filters.sqftRange.max
+          : true
       );
     }
 
@@ -70,25 +108,56 @@ export default function PropertyMap({
     setFilteredProperties(filtered);
   }, [filters, properties]);
 
-  // Use HTML-based DivIcon instead of image icons
-  const getMarkerIcon = (status: string) => {
-    let bgColor = "#8B5CF6"; // active
-    if (status === "pending") bgColor = "#F59E0B";
-    if (status === "sold") bgColor = "#10B981";
+  // Generate group colors when properties or groupBy changes
+  useEffect(() => {
+    const allItems = [...filteredProperties];
+    if (allCoordinates.length > 0) {
+      allCoordinates.forEach((coord) => {
+        if (coord.group) {
+          allItems.push({ [groupBy]: coord.group } as any);
+        }
+      });
+    }
+
+    const colors = generateGroupColors(allItems, groupBy);
+    setGroupColors(colors);
+  }, [filteredProperties, allCoordinates, groupBy]);
+
+  // Use HTML-based DivIcon with group colors
+  const getMarkerIcon = (item: Property | { group?: string }, isDetailed = true) => {
+    let bgColor = "#8B5CF6"; // default
+    let groupValue = "";
+
+    if ("builder" in item) {
+      // This is a Property
+      if (groupBy === "builder") groupValue = item.builder;
+      else if (groupBy === "city") groupValue = item.location.city;
+      else if (groupBy === "state") groupValue = item.location.state;
+      else if (groupBy === "status") groupValue = item.status;
+      else if (groupBy === "MPC") groupValue = item.MPC || "Unknown";
+    } else if (item.group) {
+      // This is a coordinate with group info
+      groupValue = item.group;
+    }
+
+    bgColor = groupColors[groupValue] || "#8B5CF6";
+
+    const size = isDetailed ? 20 : 12;
+    const borderWidth = isDetailed ? 2 : 1;
 
     return new DivIcon({
       html: `<div style="
         background-color: ${bgColor}; 
-        width: 20px; 
-        height: 20px; 
+        width: ${size}px; 
+        height: ${size}px; 
         border-radius: 50%; 
-        border: 2px solid white;
+        border: ${borderWidth}px solid white;
         box-shadow: 0 2px 5px rgba(0,0,0,0.3);
       "></div>`,
       className: "custom-div-icon",
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-      popupAnchor: [0, -10],
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2],
+      popupAnchor: [0, -size / 2],
     });
   };
 
@@ -124,15 +193,8 @@ export default function PropertyMap({
       }
     });
 
-    // Smaller icon for other points
-    const smallIcon = new Icon({
-      iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-      iconSize: [15, 24],
-      iconAnchor: [7, 24],
-      popupAnchor: [1, -24],
-      shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      shadowSize: [24, 24],
-    });
+    // Only proceed with marker creation if we have groupColors
+    if (Object.keys(groupColors).length === 0) return;
 
     if (allCoordinates && allCoordinates.length > 0) {
       const detailedCoords = new Set<string>();
@@ -149,9 +211,21 @@ export default function PropertyMap({
         if (isDetailed) {
           detailedCoords.add(coordKey);
         } else {
-          L.marker([coord.lat, coord.lng], {
-            icon: smallIcon,
+          // Use group-colored marker for non-detailed coordinates
+          const marker = L.marker([coord.lat, coord.lng], {
+            icon: getMarkerIcon({ group: coord.group || "Unknown" }, false),
           }).addTo(map);
+
+          // Add popup for non-detailed coordinates
+          if (coord.group) {
+            marker.bindPopup(`
+              <div class="p-2">
+                <h4 class="font-semibold">${coord.groupType || "Group"}: ${coord.group}</h4>
+                <p class="text-sm text-gray-600">Lat: ${coord.lat.toFixed(6)}</p>
+                <p class="text-sm text-gray-600">Lng: ${coord.lng.toFixed(6)}</p>
+              </div>
+            `);
+          }
         }
       });
     }
@@ -159,7 +233,7 @@ export default function PropertyMap({
     // Add property markers
     filteredProperties.forEach((property) => {
       const marker = L.marker([property.location.lat, property.location.lng], {
-        icon: getMarkerIcon(property.status),
+        icon: getMarkerIcon(property, true),
       }).addTo(map);
 
       marker.bindPopup(`
@@ -216,14 +290,41 @@ export default function PropertyMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [filteredProperties, allCoordinates, onPropertyClick]);
+  }, [filteredProperties, allCoordinates, onPropertyClick, groupColors]);
+
+  // Create legend component
+  const Legend = () => {
+    if (!showLegend || Object.keys(groupColors).length === 0) return null;
+
+    return (
+      <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+        <h4 className="mb-2 text-sm font-semibold capitalize">{groupBy} Groups</h4>
+        <div className="space-y-1">
+          {Object.entries(groupColors).map(([group, color]) => (
+            <div key={group} className="flex items-center gap-2">
+              <div
+                className="h-3 w-3 rounded-full border border-white shadow-sm"
+                style={{ backgroundColor: color }}
+              />
+              <span className="max-w-[120px] truncate text-xs text-gray-700" title={group}>
+                {group}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div
-      id="map-container"
-      ref={mapContainerRef}
-      className={`w-full rounded-lg border border-gray-200 shadow-sm ${className}`}
-      style={{ height, width: "100%" }}
-    />
+    <div className="relative">
+      <div
+        id="map-container"
+        ref={mapContainerRef}
+        className={`w-full rounded-lg border border-gray-200 shadow-sm ${className}`}
+        style={{ height, width: "100%" }}
+      />
+      <Legend />
+    </div>
   );
 }

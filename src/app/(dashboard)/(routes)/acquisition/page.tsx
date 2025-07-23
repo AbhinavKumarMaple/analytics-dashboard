@@ -253,12 +253,6 @@ export default function AcquisitionPage() {
 
       // Store the API properties
       const apiProps = data.data || [];
-      setApiProperties(apiProps);
-
-      // Store the coordinates from all filtered properties
-      if (data.coordinates && Array.isArray(data.coordinates)) {
-        setCoordinates(data.coordinates);
-      }
 
       // Transform API properties to match the Property type for the map
       const transformedProperties = apiProps.map((prop: ApiProperty) => ({
@@ -284,9 +278,37 @@ export default function AcquisitionPage() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         siteAvailable: true,
+        MPC: prop.MPC || "Unknown",
+        Community: prop.Community || "",
+        City: prop.City || "",
+        State: prop.State || "",
       }));
 
+      // Process coordinates and properties together
+      let coordsWithGroups = [];
+      if (data.coordinates && Array.isArray(data.coordinates)) {
+        coordsWithGroups = data.coordinates.map((coord: any) => ({
+          lat: parseFloat(coord.Latitude || coord.lat || "0"),
+          lng: parseFloat(coord.Longitude || coord.lng || "0"),
+          group:
+            coord.MPC ||
+            coord.group ||
+            transformedProperties.find(
+              (p: any) =>
+                Math.abs(p.location.lat - parseFloat(coord.Latitude || coord.lat || "0")) <
+                  0.0001 &&
+                Math.abs(p.location.lng - parseFloat(coord.Longitude || coord.lng || "0")) < 0.0001
+            )?.MPC ||
+            "Unknown",
+          groupType: "MPC",
+        }));
+      }
+
+      // Set both states together to avoid race condition
+      setApiProperties(apiProps);
       setProperties(transformedProperties);
+      setCoordinates(coordsWithGroups);
+
       setPagination(
         data.pagination || {
           total: 0,
@@ -373,7 +395,12 @@ export default function AcquisitionPage() {
               <Skeleton className="h-full w-full rounded-b-lg" />
             </div>
           ) : (
-            <PropertyMapSection initialProperties={properties} allCoordinates={coordinates} />
+            <PropertyMapSection
+              initialProperties={properties}
+              allCoordinates={coordinates}
+              groupBy="builder"
+              showLegend={true}
+            />
           )}
         </CardContent>
       </Card>
@@ -564,16 +591,16 @@ export default function AcquisitionPage() {
 
           {/* Simple Pagination */}
           {pagination.totalPages > 1 && (
-            <div className="mt-6 flex justify-center">
+            <div className="my-4 flex justify-center">
               <nav className="flex items-center space-x-2">
                 {/* First Page Button */}
                 <button
                   onClick={() => handlePageChange(1)}
                   disabled={pagination.page === 1}
-                  className={`rounded px-3 py-1 ${
+                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                     pagination.page === 1
-                      ? "cursor-not-allowed bg-gray-200"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                   }`}
                 >
                   &laquo;
@@ -583,10 +610,10 @@ export default function AcquisitionPage() {
                 <button
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className={`rounded px-3 py-1 ${
+                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                     pagination.page === 1
-                      ? "cursor-not-allowed bg-gray-200"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                   }`}
                 >
                   &lsaquo;
@@ -594,19 +621,14 @@ export default function AcquisitionPage() {
 
                 {/* Page Numbers */}
                 {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                  // Show pages around current page
                   let pageNum;
                   if (pagination.totalPages <= 5) {
-                    // If 5 or fewer pages, show all
                     pageNum = i + 1;
                   } else if (pagination.page <= 3) {
-                    // If near start, show first 5
                     pageNum = i + 1;
                   } else if (pagination.page >= pagination.totalPages - 2) {
-                    // If near end, show last 5
                     pageNum = pagination.totalPages - 4 + i;
                   } else {
-                    // Otherwise show current page and 2 on each side
                     pageNum = pagination.page - 2 + i;
                   }
 
@@ -614,10 +636,10 @@ export default function AcquisitionPage() {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`rounded px-3 py-1 ${
+                      className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                         pagination.page === pageNum
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-300 hover:bg-gray-400"
+                          ? "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                          : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                       }`}
                     >
                       {pageNum}
@@ -629,10 +651,10 @@ export default function AcquisitionPage() {
                 <button
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className={`rounded px-3 py-1 ${
+                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                     pagination.page === pagination.totalPages
-                      ? "cursor-not-allowed bg-gray-200"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                   }`}
                 >
                   &rsaquo;
@@ -642,10 +664,10 @@ export default function AcquisitionPage() {
                 <button
                   onClick={() => handlePageChange(pagination.totalPages)}
                   disabled={pagination.page === pagination.totalPages}
-                  className={`rounded px-3 py-1 ${
+                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                     pagination.page === pagination.totalPages
-                      ? "cursor-not-allowed bg-gray-200"
-                      : "bg-gray-300 hover:bg-gray-400"
+                      ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
                   }`}
                 >
                   &raquo;

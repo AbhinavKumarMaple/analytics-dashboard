@@ -32,6 +32,10 @@ export interface Property {
   features?: PropertyFeatures;
   siteAvailable?: boolean;
   images?: string[];
+  MPC?: string;
+  Community?: string;
+  City?: string;
+  State?: string;
 }
 
 export interface PropertyLocation {

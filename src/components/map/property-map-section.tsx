@@ -21,7 +21,9 @@ interface PropertyMapSectionProps {
   initialProperties?: Property[];
   initialFilters?: FilterOptions;
   className?: string;
-  allCoordinates?: Array<{ lat: number; lng: number }>;
+  allCoordinates?: Array<{ lat: number; lng: number; group?: string; groupType?: string }>;
+  groupBy?: "builder" | "city" | "state" | "status";
+  showLegend?: boolean;
 }
 
 export default function PropertyMapSection({
