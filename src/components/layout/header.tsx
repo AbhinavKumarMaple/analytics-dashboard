@@ -7,18 +7,18 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useNavigationStore } from "@/store/navigation-store";
 import { Breadcrumb } from "./breadcrumb";
-import Image from "next/image";
-import Link from "next/link";
+// import Image from "next/image";
+// import Link from "next/link";
 import { useTheme } from "@/hooks/use-theme";
 
 interface HeaderProps {
   title?: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title }) => {
+export const Header: React.FC<HeaderProps> = ({}) => {
   const { user, logout } = useAuth();
-  const pathname = usePathname();
-  const { isDarkMode, toggleTheme: theme } = useTheme();
+  // const pathname = usePathname();
+  const { theme: isDarkMode, toggleTheme: theme } = useTheme();
   const { toggleMobileMenu, isUserMenuOpen, toggleUserMenu, setUserMenuOpen } =
     useNavigationStore();
 

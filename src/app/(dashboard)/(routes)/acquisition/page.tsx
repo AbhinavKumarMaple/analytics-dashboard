@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { Property } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DollarSign, Home, Users, Ruler, ChevronDown } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 // Define interface for API property data
 interface ApiProperty {
@@ -134,65 +135,33 @@ export default function AcquisitionPage() {
     totalPages: 0,
   });
 
-  // const fetchProperties = async (page = 1) => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await fetch(`/api/properties?page=${page}`);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const paramsStr = searchParams.toString();
 
-  //     if (!response.ok) {
-  //       throw new Error("Failed to fetch properties");
-  //     }
+  useEffect(() => {
+    const urlFilters: ActiveFilters = {};
 
-  //     const data = await response.json();
+    ["MPC", "Community", "City", "State", "Zipcode"].forEach((key) => {
+      const value = searchParams.get(key);
+      if (value) {
+        urlFilters[key as keyof ActiveFilters] = value.toLowerCase();
+      }
+    });
 
-  //     // Store the API properties
-  //     const apiProps = data.data || [];
-  //     setApiProperties(apiProps);
+    setActiveFilters(urlFilters);
 
-  //     // Transform API properties to match the Property type for the map
-  //     const transformedProperties = apiProps.map((prop: ApiProperty) => ({
-  //       id: `${prop.MPC}-${prop["Homesite Price"]}`,
-  //       builder: prop.MPC || "Unknown Builder",
-  //       builderLogo: "/images/brands/lennar.svg",
-  //       lots: 1,
-  //       price: parseInt(prop["Homesite Price"] || "0"),
-  //       sqft: parseInt(prop["Homesite Sq.Ft."] || "0"),
-  //       avgPricePerSqft: Math.round(
-  //         parseInt(prop["Homesite Price"] || "0") / parseInt(prop["Homesite Sq.Ft."] || "1")
-  //       ),
-  //       location: {
-  //         lat: parseFloat(prop.Latitude || "0"),
-  //         lng: parseFloat(prop.Longitude || "0"),
-  //         address: prop["Plan URL"] || "",
-  //         city: prop.City || "",
-  //         state: prop.State || "",
-  //         zipCode: prop.Zipcode || "",
-  //         msaId: "default-msa",
-  //       },
-  //       status: "active" as const,
-  //       createdAt: new Date().toISOString(),
-  //       updatedAt: new Date().toISOString(),
-  //       siteAvailable: true,
-  //     }));
+    const pageParam = searchParams.get("page");
+    const page = pageParam ? parseInt(pageParam) : 1;
+    setPagination((prev) => ({ ...prev, page }));
 
-  //     setProperties(transformedProperties);
-  //     setPagination(
-  //       data.pagination || {
-  //         total: 0,
-  //         page: 1,
-  //         pageSize: 5,
-  //         totalPages: 0,
-  //       }
-  //     );
-  //   } catch (error) {
-  //     console.error("Error fetching properties:", error);
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+    fetchProperties(page, searchParams.toString());
+  }, [paramsStr]);
 
   const handlePageChange = (newPage: number) => {
-    fetchProperties(newPage);
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage.toString());
+    router.replace(`?${params.toString()}`, { scroll: false });
   };
 
   // Fetch filter options from API
@@ -224,17 +193,20 @@ export default function AcquisitionPage() {
 
     setActiveFilters(newFilters);
 
-    // Build query string from updated filters
-    const queryParams = new URLSearchParams();
-    queryParams.append("page", "1"); // Reset to first page when applying filters
+    // Get current URL parameters
+    const queryParams = new URLSearchParams(searchParams);
 
-    // Add active filters to query params
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value) queryParams.append(key, value);
-    });
+    // Reset page to 1 when applying filters
+    queryParams.set("page", "1");
 
-    // Fetch properties with filters
-    fetchProperties(1, queryParams.toString());
+    // Update filter parameters
+    if (value === "all") {
+      queryParams.delete(filterName);
+    } else {
+      queryParams.set(filterName, value.toLowerCase());
+    }
+
+    router.replace(`?${queryParams.toString()}`, { scroll: false });
   };
 
   // Modified fetchProperties to accept query string and handle coordinates

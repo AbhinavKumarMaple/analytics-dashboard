@@ -2,7 +2,7 @@
 .chatbot-button {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  left: 20px;
   background-color: #007bff;
   color: white;
   border: none;
@@ -15,18 +15,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Ensure it's above other content */
+  z-index: 1000;
+  transition: background-color 0.2s;
+}
+
+.dark .chatbot-button {
+  background-color: #3b82f6;
 }
 
 .chatbot-button:hover {
   background-color: #0056b3;
 }
 
+.dark .chatbot-button:hover {
+  background-color: #2563eb;
+}
+
 /* Chatbot Window */
 .chatbot-window {
   position: fixed;
-  bottom: 90px; /* Above the button */
-  right: 20px;
+  bottom: 90px;
+  left: 20px;
   width: 525px;
   height: 70%;
   background-color: white;
@@ -35,8 +44,13 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  z-index: 999; /* Below the button but above other content */
+  z-index: 9999;
   overflow: hidden;
+}
+
+.dark .chatbot-window {
+  background-color: #1e1e1e;
+  border-color: #2d2d2d;
 }
 
 .chatbot-header {
@@ -48,10 +62,19 @@
   border-bottom: 1px solid #eee;
 }
 
+.dark .chatbot-header {
+  background-color: #2d2d2d;
+  border-bottom-color: #3d3d3d;
+}
+
 .chatbot-header h3 {
   margin: 0;
   font-size: 18px;
   color: #333;
+}
+
+.dark .chatbot-header h3 {
+  color: #e5e5e5;
 }
 
 .chatbot-header .close-button {
@@ -62,8 +85,16 @@
   color: #666;
 }
 
+.dark .chatbot-header .close-button {
+  color: #999;
+}
+
 .chatbot-header .close-button:hover {
   color: #333;
+}
+
+.dark .chatbot-header .close-button:hover {
+  color: #fff;
 }
 
 .chatbot-messages {
@@ -73,6 +104,10 @@
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
+}
+
+.dark .chatbot-messages {
+  background-color: #1a1a1a;
 }
 
 .chat-message {
@@ -90,11 +125,20 @@
   border-bottom-right-radius: 2px;
 }
 
+.dark .user-message {
+  background-color: #3b82f6;
+}
+
 .ai-message {
   align-self: flex-start;
   background-color: #e2e2e2;
   color: #333;
   border-bottom-left-radius: 2px;
+}
+
+.dark .ai-message {
+  background-color: #2d2d2d;
+  color: #e5e5e5;
 }
 
 .loading-indicator {
@@ -106,6 +150,11 @@
   font-style: italic;
 }
 
+.dark .loading-indicator {
+  background-color: #2d2d2d;
+  color: #999;
+}
+
 .chatbot-input-form {
   display: flex;
   padding: 10px 15px;
@@ -113,18 +162,36 @@
   background-color: #fff;
 }
 
-.chatbot-input-form input {
+.dark .chatbot-input-form {
+  background-color: #1e1e1e;
+  border-top-color: #2d2d2d;
+}
+
+.chatbot-input-form textarea {
   flex-grow: 1;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 20px;
   margin-right: 10px;
   font-size: 14px;
+  resize: none;
+  background-color: #fff;
+  color: #333;
 }
 
-.chatbot-input-form input:focus {
+.dark .chatbot-input-form textarea {
+  background-color: #2d2d2d;
+  border-color: #3d3d3d;
+  color: #e5e5e5;
+}
+
+.chatbot-input-form textarea:focus {
   outline: none;
   border-color: #007bff;
+}
+
+.dark .chatbot-input-form textarea:focus {
+  border-color: #3b82f6;
 }
 
 .chatbot-input-form button {
@@ -135,15 +202,28 @@
   padding: 10px 15px;
   cursor: pointer;
   font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.dark .chatbot-input-form button {
+  background-color: #059669;
 }
 
 .chatbot-input-form button:hover:not(:disabled) {
   background-color: #218838;
 }
 
+.dark .chatbot-input-form button:hover:not(:disabled) {
+  background-color: #047857;
+}
+
 .chatbot-input-form button:disabled {
   background-color: #94d3a2;
   cursor: not-allowed;
+}
+
+.dark .chatbot-input-form button:disabled {
+  background-color: #065f46;
 }
 
 /* Markdown specific styling */
@@ -152,8 +232,12 @@
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto;
-  white-space: pre-wrap; /* Ensures long lines wrap */
-  word-break: break-all; /* Breaks words if necessary */
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.dark .ai-message pre {
+  background-color: #2d2d2d;
 }
 
 .ai-message code {
@@ -162,6 +246,10 @@
   background-color: rgba(27, 31, 35, 0.05);
   padding: 0.2em 0.4em;
   border-radius: 3px;
+}
+
+.dark .ai-message code {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .ai-message pre code {

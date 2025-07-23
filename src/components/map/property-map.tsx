@@ -6,6 +6,7 @@ import { Property, FilterOptions } from "@/types";
 import L, { Icon, DivIcon, LatLngBounds, LatLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+import * as LDraw from "leaflet-draw";
 
 interface PropertyMapProps {
   properties: Property[];
@@ -17,9 +18,11 @@ interface PropertyMapProps {
   allCoordinates?: Array<{ lat: number; lng: number; group?: string; groupType?: string }>;
   groupBy?: "builder" | "city" | "state" | "status" | "MPC";
   showLegend?: boolean;
+  enableDrawing?: boolean;
 }
 
 export default function PropertyMap({
+  enableDrawing = true,
   properties,
   onPropertyClick,
   onPolygonDraw,
@@ -34,6 +37,7 @@ export default function PropertyMap({
   const [groupColors, setGroupColors] = useState<Record<string, string>>({});
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
+  const drawnItemsRef = useRef<L.FeatureGroup | null>(null);
 
   // Generate colors for groups
   const generateGroupColors = (items: any[], groupByField: string) => {
@@ -182,6 +186,68 @@ export default function PropertyMap({
         attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(mapInstanceRef.current);
+
+      if (enableDrawing) {
+        drawnItemsRef.current = new L.FeatureGroup();
+        mapInstanceRef.current.addLayer(drawnItemsRef.current);
+
+        const drawControl = new LDraw.Control.Draw({
+          draw: {
+            polygon: true,
+            marker: true,
+            polyline: true,
+            rectangle: true,
+            circle: false,
+            circlemarker: false,
+          },
+          edit: {
+            featureGroup: drawnItemsRef.current,
+            remove: true,
+          },
+        });
+        mapInstanceRef.current.addControl(drawControl);
+
+        const savedDrawings = localStorage.getItem("mapDrawings");
+        if (savedDrawings) {
+          const geoJson = JSON.parse(savedDrawings);
+          L.geoJSON(geoJson, {
+            onEachFeature: (feature, layer) => {
+              drawnItemsRef.current?.addLayer(layer);
+            },
+          });
+        }
+
+        mapInstanceRef.current.on(LDraw.Draw.Event.CREATED, (e) => {
+          const layer = (e as LDraw.DrawEvents.Created).layer;
+          drawnItemsRef.current?.addLayer(layer);
+          saveDrawings();
+        });
+
+        mapInstanceRef.current.on(LDraw.Draw.Event.EDITED, saveDrawings);
+        mapInstanceRef.current.on(LDraw.Draw.Event.DELETED, saveDrawings);
+
+        const clearControl = L.control({ position: "topright" });
+        clearControl.onAdd = () => {
+          const div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
+          div.style.backgroundColor = "white";
+          div.style.padding = "5px";
+          div.style.border = "2px solid rgba(0,0,0,0.2)";
+          div.innerHTML = "Clear Drawings";
+          div.onclick = () => {
+            drawnItemsRef.current?.clearLayers();
+            localStorage.removeItem("mapDrawings");
+          };
+          return div;
+        };
+        clearControl.addTo(mapInstanceRef.current);
+      }
+
+      function saveDrawings() {
+        if (drawnItemsRef.current) {
+          const geoJson = drawnItemsRef.current.toGeoJSON();
+          localStorage.setItem("mapDrawings", JSON.stringify(geoJson));
+        }
+      }
     }
 
     const map = mapInstanceRef.current;
