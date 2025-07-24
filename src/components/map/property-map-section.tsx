@@ -59,27 +59,21 @@ export default function PropertyMapSection({
   }, [initialProperties]);
 
   return (
-    <div className={`flex gap-4 ${className}`}>
-      <div className="flex-1">
+    <div className={`w-full max-w-full ${className}`} style={{ width: "100%", maxWidth: "100%" }}>
+      <div
+        className="w-full max-w-full overflow-hidden"
+        style={{ width: "100%", maxWidth: "100%" }}
+      >
         <PropertyMap
           properties={properties}
           onPropertyClick={handlePropertyClick}
           onPolygonDraw={handlePolygonDraw}
           filters={filters}
-          height="600px"
-          className="w-full"
+          height="300px"
+          className="w-full max-w-full"
           allCoordinates={allCoordinates}
         />
       </div>
-      {/* <div className="lg:col-span-1">
-        <MapControls
-          filters={filters || {}}
-          onFilterChange={updateFilters}
-          onReset={resetFilters}
-          builders={builders}
-          className="h-full"
-        />
-      </div> */}
     </div>
   );
 }

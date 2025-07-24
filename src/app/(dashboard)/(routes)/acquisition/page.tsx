@@ -7,6 +7,7 @@ import { KPICard } from "@/components/ui/kpi-card";
 import dynamic from "next/dynamic";
 import { Property } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import PropertyCard from "@/components/properties/property-card";
 import {
   DollarSign,
   Home,
@@ -85,7 +86,7 @@ function FilterCard({ title, value, options, onChange }: FilterCardProps) {
   return (
     <div className="relative">
       <div
-        className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
+        className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-md dark:border-gray-800 dark:bg-gray-800"
         onClick={toggleDropdown}
       >
         <div className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">{title}</div>
@@ -421,22 +422,26 @@ export default function AcquisitionPage() {
         />
       </div>
 
-      <Card variant="no-padding">
+      <Card variant="no-padding" className="overflow-hidden">
         <CardHeader>
           <CardTitle>Interactive Property Map</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="h-[600px] w-full animate-pulse rounded-b-lg bg-gray-100">
+            <div className="h-[300px] w-full animate-pulse rounded-b-lg bg-gray-100 sm:h-[400px]">
               <Skeleton className="h-full w-full rounded-b-lg" />
             </div>
           ) : (
-            <PropertyMapSection
-              initialProperties={properties}
-              allCoordinates={coordinates}
-              groupBy="builder"
-              showLegend={true}
-            />
+            <div className="w-full max-w-full overflow-hidden rounded-b-lg">
+              <div style={{ width: "100%", maxWidth: "100%" }}>
+                <PropertyMapSection
+                  initialProperties={properties}
+                  allCoordinates={coordinates}
+                  groupBy="builder"
+                  showLegend={true}
+                />
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>
@@ -543,145 +548,174 @@ export default function AcquisitionPage() {
           <CardTitle>Properties</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-white text-black dark:bg-gray-700 dark:text-white">
-                <tr>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("MPC")}
-                  >
-                    <div className="flex items-center">
-                      MPC
-                      {getSortIcon("MPC")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("Community")}
-                  >
-                    <div className="flex items-center">
-                      Community
-                      {getSortIcon("Community")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("City")}
-                  >
-                    <div className="flex items-center">
-                      City
-                      {getSortIcon("City")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("State")}
-                  >
-                    <div className="flex items-center">
-                      State
-                      {getSortIcon("State")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("Homesite Price")}
-                  >
-                    <div className="flex items-center">
-                      Price
-                      {getSortIcon("Homesite Price")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("Homesite Sq.Ft.")}
-                  >
-                    <div className="flex items-center">
-                      Sq. Ft.
-                      {getSortIcon("Homesite Sq.Ft.")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("Zipcode")}
-                  >
-                    <div className="flex items-center">
-                      Zipcode
-                      {getSortIcon("Zipcode")}
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
-                    onClick={() => handleSort("Plan URL")}
-                  >
-                    <div className="flex items-center">
-                      Plan URL
-                      {getSortIcon("Plan URL")}
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white text-black dark:bg-gray-500 dark:text-white">
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center">
-                      <div className="flex justify-center">
-                        <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
-                      </div>
-                    </td>
-                  </tr>
-                ) : sortedProperties.length > 0 ? (
-                  sortedProperties.map((property, index) => (
-                    <tr
+          {isLoading ? (
+            <div className="flex justify-center py-8">
+              <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-t-2 border-blue-500"></div>
+            </div>
+          ) : sortedProperties.length > 0 ? (
+            <>
+              <div className="block lg:hidden">
+                <div className="space-y-4">
+                  {sortedProperties.map((property, index) => (
+                    <PropertyCard
                       key={index}
-                      className="bg-white text-black hover:bg-gray-50 dark:bg-gray-700 dark:text-white"
-                    >
-                      <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:bg-gray-700 dark:text-white">
-                        {property.MPC}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">{property.Community}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">{property.City}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">{property.State}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">
-                        ${property["Homesite Price"]}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">
-                        {property["Homesite Sq.Ft."]}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">{property.Zipcode}</td>
-                      <td className="whitespace-nowrap px-6 py-4 text-sm">
-                        {property["Plan URL"]}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center">
-                      No properties found
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                      property={{
+                        MPC: property.MPC,
+                        Community: property.Community,
+                        City: property.City,
+                        State: property.State,
+                        "Homesite Price": parseInt(property["Homesite Price"] || "0"),
+                        "Homesite Sq.Ft.": parseInt(property["Homesite Sq.Ft."] || "0"),
+                        Zipcode: property.Zipcode,
+                        "Plan URL": property["Plan URL"],
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
 
-          {/* Simple Pagination */}
+              <div className="hidden lg:block">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[800px] divide-y divide-gray-200">
+                    <thead className="bg-white text-black dark:bg-gray-700 dark:text-white">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("MPC")}
+                        >
+                          <div className="flex items-center">
+                            MPC
+                            {getSortIcon("MPC")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("Community")}
+                        >
+                          <div className="flex items-center">
+                            Community
+                            {getSortIcon("Community")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("City")}
+                        >
+                          <div className="flex items-center">
+                            City
+                            {getSortIcon("City")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("State")}
+                        >
+                          <div className="flex items-center">
+                            State
+                            {getSortIcon("State")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("Homesite Price")}
+                        >
+                          <div className="flex items-center">
+                            Price
+                            {getSortIcon("Homesite Price")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("Homesite Sq.Ft.")}
+                        >
+                          <div className="flex items-center">
+                            Sq. Ft.
+                            {getSortIcon("Homesite Sq.Ft.")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("Zipcode")}
+                        >
+                          <div className="flex items-center">
+                            Zipcode
+                            {getSortIcon("Zipcode")}
+                          </div>
+                        </th>
+                        <th
+                          scope="col"
+                          className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                          onClick={() => handleSort("Plan URL")}
+                        >
+                          <div className="flex items-center">
+                            Plan URL
+                            {getSortIcon("Plan URL")}
+                          </div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white text-black dark:bg-gray-500 dark:text-white">
+                      {sortedProperties.map((property, index) => (
+                        <tr
+                          key={index}
+                          className="bg-white text-black hover:bg-gray-50 dark:bg-gray-700 dark:text-white"
+                        >
+                          <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:bg-gray-700 dark:text-white">
+                            {property.MPC}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">
+                            {property.Community}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">{property.City}</td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">{property.State}</td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">
+                            ${property["Homesite Price"]}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">
+                            {property["Homesite Sq.Ft."]}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">
+                            {property.Zipcode}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 text-sm">
+                            {property["Plan URL"] ? (
+                              <a
+                                href={property["Plan URL"]}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className=""
+                              >
+                                Link
+                              </a>
+                            ) : (
+                              <span className="">N/A</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="py-8 text-center text-gray-500">No properties found</div>
+          )}
+
           {pagination.totalPages > 1 && (
-            <div className="my-4 flex justify-center">
-              <nav className="flex items-center space-x-2">
-                {/* First Page Button */}
+            <div className="mt-6 flex justify-center">
+              <nav className="flex items-center space-x-1 sm:space-x-2">
                 <button
                   onClick={() => handlePageChange(1)}
                   disabled={pagination.page === 1}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                     pagination.page === 1
                       ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -690,11 +724,10 @@ export default function AcquisitionPage() {
                   &laquo;
                 </button>
 
-                {/* Previous Page Button */}
                 <button
                   onClick={() => handlePageChange(pagination.page - 1)}
                   disabled={pagination.page === 1}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                     pagination.page === 1
                       ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -703,7 +736,6 @@ export default function AcquisitionPage() {
                   &lsaquo;
                 </button>
 
-                {/* Page Numbers */}
                 {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                   let pageNum;
                   if (pagination.totalPages <= 5) {
@@ -720,7 +752,7 @@ export default function AcquisitionPage() {
                     <button
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
-                      className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                      className={`rounded px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                         pagination.page === pageNum
                           ? "bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -731,11 +763,10 @@ export default function AcquisitionPage() {
                   );
                 })}
 
-                {/* Next Page Button */}
                 <button
                   onClick={() => handlePageChange(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                     pagination.page === pagination.totalPages
                       ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
@@ -744,11 +775,10 @@ export default function AcquisitionPage() {
                   &rsaquo;
                 </button>
 
-                {/* Last Page Button */}
                 <button
                   onClick={() => handlePageChange(pagination.totalPages)}
                   disabled={pagination.page === pagination.totalPages}
-                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded px-2 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm ${
                     pagination.page === pagination.totalPages
                       ? "cursor-not-allowed bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500"
                       : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"

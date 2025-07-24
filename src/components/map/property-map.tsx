@@ -373,16 +373,21 @@ export default function PropertyMap({
     if (!showLegend || Object.keys(groupColors).length === 0) return null;
 
     return (
-      <div className="absolute bottom-4 left-4 z-[1000] rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
-        <h4 className="mb-2 text-sm font-semibold capitalize">{groupBy} Groups</h4>
-        <div className="space-y-1">
+      <div className="absolute bottom-2 left-2 z-[1000] max-w-[200px] rounded-lg border border-gray-200 bg-white p-2 shadow-lg sm:bottom-4 sm:left-4 sm:max-w-none sm:p-3">
+        <h4 className="mb-1 text-xs font-semibold capitalize sm:mb-2 sm:text-sm">
+          {groupBy} Groups
+        </h4>
+        <div className="space-y-0.5 sm:space-y-1">
           {Object.entries(groupColors).map(([group, color]) => (
-            <div key={group} className="flex items-center gap-2">
+            <div key={group} className="flex items-center gap-1 sm:gap-2">
               <div
-                className="h-3 w-3 rounded-full border border-white shadow-sm"
+                className="h-2 w-2 rounded-full border border-white shadow-sm sm:h-3 sm:w-3"
                 style={{ backgroundColor: color }}
               />
-              <span className="max-w-[120px] truncate text-xs text-gray-700" title={group}>
+              <span
+                className="max-w-[100px] truncate text-[10px] text-gray-700 sm:max-w-[120px] sm:text-xs"
+                title={group}
+              >
                 {group}
               </span>
             </div>
@@ -393,12 +398,12 @@ export default function PropertyMap({
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full overflow-hidden">
       <div
         id="map-container"
         ref={mapContainerRef}
         className={`w-full rounded-lg border border-gray-200 shadow-sm ${className}`}
-        style={{ height, width: "100%" }}
+        style={{ height, width: "100%", minWidth: "100%" }}
       />
       <Legend />
     </div>

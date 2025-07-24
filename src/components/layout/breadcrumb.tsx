@@ -63,11 +63,11 @@ export const Breadcrumb: React.FC = () => {
           <li key={item.href} className="inline-flex items-center">
             {index > 0 && <ChevronRight className="mx-2 h-3 w-3 text-gray-400 rtl:rotate-180" />}
             {index === breadcrumbItems.length - 1 ? (
-              <span className="text-sm font-medium text-gray-500">{item.label}</span>
+              <span className=" text-[9px] font-medium text-gray-500 md:text-sm">{item.label}</span>
             ) : (
               <Link
                 href={item.href}
-                className="text-sm font-medium text-gray-700 hover:text-primary-purple"
+                className=" text-[9px] font-medium text-gray-700 hover:text-primary-purple md:text-sm"
               >
                 {item.label}
               </Link>

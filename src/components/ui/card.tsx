@@ -13,7 +13,7 @@ interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 const cardVariants = cva("rounded-[20px] bg-white border transition-all duration-200", {
   variants: {
     variant: {
-      default: "bg-white dark:bg-gray-800 border-gray-100  dark:border-gray-600",
+      default: "bg-white dark:bg-gray-800 border-gray-100  dark:border-gray-700",
       outline: "bg-transparent border-gray-200 p-6 dark:border-gray-700",
       elevated: "theme-bg border-transparent shadow-md p-6",
       interactive:

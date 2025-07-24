@@ -57,16 +57,16 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-between bg-transparent  pt-5 dark:border-gray-700">
+    <header className="sticky top-0 z-30 flex h-20  items-center justify-between  bg-transparent pt-5 dark:border-gray-700 ">
       <div className="flex items-center">
         <Button
           onClick={toggleMobileMenu}
           variant="ghost"
           size="sm"
-          className="mr-2 md:hidden"
+          className="mr-0 md:mr-2 md:hidden"
           aria-label="Toggle menu"
         >
-          <Menu className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          <Menu className="h-3 w-3 text-gray-600 dark:text-gray-300 md:h-5 md:w-5" />
         </Button>
         {/* <Link href="/dashboard" className="mr-4 flex items-center">
           <Image
@@ -78,14 +78,14 @@ export const Header: React.FC<HeaderProps> = ({}) => {
           />
           <span className="ml-2 text-xl font-bold text-gray-900 dark:text-white">Panthera</span>
         </Link> */}
-        <div className="ml-6">
+        <div className="m-0 md:ml-6">
           <Breadcrumb />
         </div>
       </div>
 
-      <div className=" m-6 flex items-center space-x-3 rounded-xl bg-white p-2 dark:bg-gray-700">
+      <div className="m-1  flex items-center space-x-0 rounded-xl bg-white  p-0 dark:bg-gray-700 md:m-6 md:space-x-3 md:p-2">
         <Button variant="ghost" size="icon" className="rounded-full" aria-label="Notifications">
-          <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          <Bell className="h-3 w-3 text-gray-600 dark:text-gray-300 md:h-5 md:w-5" />
         </Button>
 
         <Button
@@ -96,14 +96,14 @@ export const Header: React.FC<HeaderProps> = ({}) => {
           onClick={toggleTheme}
         >
           {isDarkMode ? (
-            <Sun className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Sun className="h-3 w-3 text-gray-600 dark:text-gray-300 md:h-5 md:w-5" />
           ) : (
-            <Moon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            <Moon className="h-3 w-3 text-gray-600 dark:text-gray-300 md:h-5 md:w-5" />
           )}
         </Button>
 
         <Button variant="ghost" size="icon" className="rounded-full" aria-label="Settings">
-          <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+          <Settings className="h-3 w-3 text-gray-600 dark:text-gray-300 md:h-5 md:w-5" />
         </Button>
 
         {/* User Profile Dropdown */}
