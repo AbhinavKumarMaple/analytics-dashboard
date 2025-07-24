@@ -103,8 +103,8 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
   }
 
   return (
-    <div className="flex items-center justify-between rounded-lg p-4">
-      <h2 className="text-xl font-semibold ">{title}</h2>
+    <div className="p- flex items-center justify-between rounded-lg md:p-4">
+      <h2 className="max-w-[50px] text-[12px] font-semibold md:w-full md:text-xl ">{title}</h2>
       <div className="flex items-center space-x-4">
         <div className="flex space-x-2">
           {options.map((option) => (
@@ -113,7 +113,7 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
               variant="ghost"
               size="sm"
               className={cn(
-                "rounded-full px-4 py-2 font-dmsans  text-sm font-medium",
+                "line-clamp-1 w-[70px] rounded-full px-4 py-2 font-dmsans  text-sm font-medium md:w-full",
                 selectedOption === option.value
                   ? "bg-white text-blue-700 dark:bg-gray-700 dark:text-white"
                   : "text-text-options hover:bg-gray-50 dark:text-gray-500 dark:hover:bg-gray-400 dark:hover:text-gray-500"
@@ -190,7 +190,7 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
           </Button>
 
           {isOpen && (
-            <div className="absolute right-0 z-50 mt-2 w-[280px] rounded-md bg-white p-2 shadow-lg">
+            <div className="absolute right-0 z-50 mt-2 w-[280px] rounded-md bg-white p-2 shadow-lg dark:bg-gray-700">
               <div className="mb-2 flex items-center justify-between">
                 <button onClick={prevMonth} className="rounded-full p-1 hover:bg-gray-100">
                   <ChevronLeft className="h-5 w-5" />
@@ -201,7 +201,7 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
                 </button>
               </div>
 
-              <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500">
+              <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 dark:bg-gray-700">
                 <div>Su</div>
                 <div>Mo</div>
                 <div>Tu</div>
@@ -213,7 +213,7 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
 
               <div className="mt-1">
                 {weeks.map((week, weekIndex) => (
-                  <div key={weekIndex} className="grid grid-cols-7 gap-1">
+                  <div key={weekIndex} className="grid grid-cols-7 gap-1 dark:bg-gray-700">
                     {week.map((day, dayIndex) => {
                       const isCurrentMonth = isSameMonth(day, currentMonth);
                       const isSelected = isSameDay(day, date);
@@ -227,7 +227,7 @@ const MarketFilter: React.FC<MarketFilterProps> = ({
                             "flex h-8 w-8 items-center justify-center rounded-full text-sm",
                             isValidDate && isCurrentMonth
                               ? "hover:bg-gray-100"
-                              : "cursor-default text-gray-300",
+                              : "cursor-default text-gray-300 ",
                             isSelected && "bg-blue-600 text-white hover:bg-blue-700"
                           )}
                           disabled={!isValidDate || !isCurrentMonth}

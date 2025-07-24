@@ -18,6 +18,7 @@ import {
   ChevronsUpDown,
 } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import MarketFilter from "@/components/market/market-filter";
 
 // Define interface for API property data
 interface ApiProperty {
@@ -367,6 +368,18 @@ export default function AcquisitionPage() {
     fetchFilterOptions();
   }, []);
 
+  const [_selectedFilterOption, setSelectedFilterOption] = useState("all-builders");
+
+  const handleOptionSelect = (value: string) => {
+    setSelectedFilterOption(value);
+    console.log("Selected Option:", value);
+  };
+
+  const filterOptions1 = [
+    { label: "All Builders", value: "all-builders" },
+    { label: "Builders with available Site Plan", value: "builders-with-site-plan" },
+  ];
+
   return (
     <div className="space-y-6">
       <HeroBanner
@@ -388,7 +401,7 @@ export default function AcquisitionPage() {
         gradientFromColor="from-primary-purple"
         gradientToColor="to-secondary-blue"
       />
-
+      <MarketFilter title="Options" options={filterOptions1} onOptionSelect={handleOptionSelect} />
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
         <KPICard
           title="Community"

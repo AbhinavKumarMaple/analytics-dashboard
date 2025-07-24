@@ -23,7 +23,7 @@ export const MobileNav: React.FC<MobileNavProps> = ({ className }) => {
   return (
     <div
       className={cn(
-        "fixed inset-0 top-0 z-50 flex h-full w-full flex-col bg-white dark:bg-gray-800",
+        "fixed inset-0 top-0 z-[9999] flex h-full w-full flex-col bg-white dark:bg-gray-800",
         className
       )}
     >

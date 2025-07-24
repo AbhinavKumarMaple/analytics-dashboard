@@ -184,12 +184,14 @@
   resize: none;
   background-color: #fff;
   color: #333;
+  overflow-y: hidden !important;
 }
 
 .dark .chatbot-input-form textarea {
   background-color: #2d2d2d;
   border-color: #3d3d3d;
   color: #e5e5e5;
+  overflow-y: hidden !important;
 }
 
 .chatbot-input-form textarea:focus {

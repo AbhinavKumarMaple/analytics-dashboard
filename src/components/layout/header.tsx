@@ -57,7 +57,7 @@ export const Header: React.FC<HeaderProps> = ({}) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-20  items-center justify-between  bg-transparent pt-5 dark:border-gray-700 ">
+    <header className="sticky top-0 z-[9999] flex h-20  items-center justify-between  bg-transparent pr-2 pt-5 dark:border-gray-700">
       <div className="flex items-center">
         <Button
           onClick={toggleMobileMenu}
