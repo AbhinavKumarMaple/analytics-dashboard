@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Eye, EyeOff } from "lucide-react";
 // import { useAuth } from "@/contexts/auth-context";
 import { z } from "zod";
 import { useAuth } from "@/hooks/use-auth";
@@ -24,6 +25,7 @@ const loginSchema = z.object({
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState<{ email?: string; password?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +67,24 @@ export default function LoginPage() {
     try {
       const success = await login(email, password);
       console.log("success", success);
+      if (success) {
+        router.push("/acquisition");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setEmail("admin@panthera.com");
+    setPassword("password123");
+    setFormErrors({});
+
+    setIsSubmitting(true);
+
+    try {
+      const success = await login("admin@panthera.com", "password123");
+      console.log("Demo login success", success);
       if (success) {
         router.push("/acquisition");
       }
@@ -115,11 +135,11 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium ">
                 Password
               </label>
-              <div className="mt-1">
+              <div className="relative mt-1">
                 <input
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
                   required
                   value={password}
@@ -127,8 +147,19 @@ export default function LoginPage() {
                   placeholder="Enter your password"
                   className={`block w-full appearance-none rounded-lg border ${
                     formErrors.password ? "border-red-500" : "border-gray-300"
-                  } relative z-10 bg-white px-4 py-3 text-sm placeholder-gray-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
+                  } relative z-10 bg-white px-4 py-3 pr-12 text-sm placeholder-gray-400 shadow-sm transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 z-20 flex items-center pr-3"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
                 {formErrors.password && (
                   <p className="mt-1 text-xs text-red-600">{formErrors.password}</p>
                 )}
@@ -160,13 +191,23 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div>
+            <div className="space-y-3">
               <Button
                 type="submit"
                 className="relative z-10 h-12 w-full rounded-lg bg-blue-600 text-base font-medium transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? "Signing in..." : "Sign in"}
+              </Button>
+
+              <Button
+                type="button"
+                onClick={handleDemoLogin}
+                variant="outline"
+                className="relative z-10 h-12 w-full rounded-lg border-2 border-gray-300 bg-white text-base font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Signing in..." : "Demo Login"}
               </Button>
             </div>
           </form>
