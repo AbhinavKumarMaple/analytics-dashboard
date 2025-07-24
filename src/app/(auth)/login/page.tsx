@@ -74,13 +74,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 pb-12 pt-24 sm:px-6 lg:px-8">
-      <Card className="relative z-30 w-full max-w-md bg-white shadow-lg">
+    <div className=" flex min-h-screen items-center justify-center bg-white px-4 pb-12 pt-24 shadow-lg dark:bg-gray-800 sm:px-6 lg:px-8">
+      <Card className="relative z-30 w-full max-w-md bg-white shadow-lg dark:bg-gray-700">
         <CardHeader className="space-y-1 pb-6">
-          <CardTitle className="text-center text-2xl font-bold text-gray-900">
-            Welcome Back
-          </CardTitle>
-          <CardDescription className="text-center text-gray-600">
+          <CardTitle className="text-center text-2xl font-bold ">Welcome Back</CardTitle>
+          <CardDescription className="text-center ">
             Sign in to your PANTHERA account
           </CardDescription>
         </CardHeader>
@@ -90,7 +88,7 @@ export default function LoginPage() {
           )}
           <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm font-medium ">
                 Email address
               </label>
               <div className="mt-1">
@@ -114,7 +112,7 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium ">
                 Password
               </label>
               <div className="mt-1">
@@ -147,7 +145,7 @@ export default function LoginPage() {
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="relative z-10 h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500"
                 />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                <label htmlFor="remember-me" className="ml-2 block text-sm ">
                   Remember me
                 </label>
               </div>
@@ -174,7 +172,7 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex justify-center px-6 pt-4">
-          <p className="text-center text-sm text-gray-600">
+          <p className="text-center text-sm ">
             Dont have an account?{" "}
             <a
               href="#"
