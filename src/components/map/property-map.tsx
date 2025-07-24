@@ -236,7 +236,7 @@ export default function PropertyMap({
         mapInstanceRef.current.on("draw:edited", saveDrawings);
         mapInstanceRef.current.on("draw:deleted", saveDrawings);
 
-        const clearControl = L.control({ position: "topright" });
+        const clearControl = new L.Control({ position: "topright" });
         clearControl.onAdd = () => {
           const div = L.DomUtil.create("div", "leaflet-bar leaflet-control leaflet-control-custom");
           div.style.backgroundColor = "white";

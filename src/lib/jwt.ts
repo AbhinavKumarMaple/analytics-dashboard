@@ -28,7 +28,7 @@ export function generateToken(user: Partial<User>): string {
 export function verifyToken(token: string): any {
   try {
     return verify(token, JWT_SECRET);
-  } catch (error) {
+  } catch {
     return null;
   }
 }

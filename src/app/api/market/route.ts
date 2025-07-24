@@ -14,13 +14,8 @@ const marketQuerySchema = z.object({
   category: z.enum(["homesClosed", "priceIncrease", "salesPace", "newHomesAdded"]).optional(),
   region: z.string().optional(),
   sortBy: z.string().optional(),
-  sortDirection: z.enum(["asc", "desc"]).optional().default("asc"),
-  limit: z
-    .string()
-    .transform((val) => parseInt(val))
-    .pipe(z.number().int().positive().max(100))
-    .optional()
-    .default("10"),
+  sortDirection: z.enum(["asc", "desc"]).optional(),
+  limit: z.string().optional(),
 });
 
 export async function GET(request: Request) {
@@ -35,9 +30,10 @@ export async function GET(request: Request) {
 
     const { category, region, sortBy, limit } = queryResult.data;
     const sortDirection = queryResult.data.sortDirection || "asc"; // Explicitly default sortDirection
+    const parsedLimit = parseInt(limit || "10"); // Parse limit with default
 
     // Get market data with filters
-    const marketData = MockDataService.getMarketViewData(region, Number(limit));
+    const marketData = MockDataService.getMarketViewData(region, parsedLimit);
 
     // Return specific category data if requested
     if (category) {

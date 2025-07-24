@@ -34,7 +34,7 @@ export function getUserRole(): string | null {
   try {
     const userData = JSON.parse(user);
     return userData.role;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

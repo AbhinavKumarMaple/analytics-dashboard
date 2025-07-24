@@ -1,5 +1,4 @@
 import React from "react";
-import { Breadcrumb } from "@/components/layout/breadcrumb";
 import { BrandLogoGrid } from "@/components/dashboard/brand-logo-grid";
 import logo1 from "../../../../../public/companies/a (1).png";
 import logo2 from "../../../../../public/companies/a (2).png";

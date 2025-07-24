@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HeroBanner } from "@/components/ui/hero-banner";
-import { MetricsDisplay } from "@/components/dashboard/metrics-display";
+
 import MarketFilter from "@/components/market/market-filter";
 
 export default function MarketPage() {
-  const [selectedFilterOption, setSelectedFilterOption] = useState("all-builders");
+  const [_selectedFilterOption, setSelectedFilterOption] = useState("all-builders");
 
   const handleOptionSelect = (value: string) => {
     setSelectedFilterOption(value);

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { MockDataService } from "@/services/mockDataService";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = params.id;
+    const { id } = await params;
 
     // Get property by ID from mock data service
     const property = MockDataService.getPropertyById(id);

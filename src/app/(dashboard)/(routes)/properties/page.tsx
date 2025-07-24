@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useCallback } from "react";
 
 interface Property {
   MPC: string;
@@ -40,39 +39,40 @@ export default function PropertiesPage() {
     State: "",
   });
 
-  const searchParams = useSearchParams();
-
   // Fetch properties with filters and pagination
-  const fetchProperties = async (page = 1) => {
-    try {
-      setLoading(true);
+  const fetchProperties = useCallback(
+    async (page = 1) => {
+      try {
+        setLoading(true);
 
-      // Build query string from filters
-      const queryParams = new URLSearchParams();
-      queryParams.append("page", page.toString());
+        // Build query string from filters
+        const queryParams = new URLSearchParams();
+        queryParams.append("page", page.toString());
 
-      // Add filters to query params if they have values
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value) queryParams.append(key, value);
-      });
+        // Add filters to query params if they have values
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) queryParams.append(key, value);
+        });
 
-      const response = await fetch(`/api/properties?${queryParams.toString()}`);
+        const response = await fetch(`/api/properties?${queryParams.toString()}`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch properties");
+        if (!response.ok) {
+          throw new Error("Failed to fetch properties");
+        }
+
+        const data = await response.json();
+        setProperties(data.data);
+        setPagination(data.pagination);
+        setError(null);
+      } catch (err) {
+        setError("Error fetching properties. Please try again.");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
-
-      const data = await response.json();
-      setProperties(data.data);
-      setPagination(data.pagination);
-      setError(null);
-    } catch (err) {
-      setError("Error fetching properties. Please try again.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [filters]
+  );
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -97,7 +97,7 @@ export default function PropertiesPage() {
   // Initial fetch
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [fetchProperties]);
 
   return (
     <div className="container mx-auto p-4">

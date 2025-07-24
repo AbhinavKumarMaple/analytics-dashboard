@@ -328,7 +328,7 @@ export default function DesignSystemPage() {
           </GridItem>
 
           <GridItem>
-            <Card variant="filled">
+            <Card variant="elevated">
               <CardHeader>
                 <CardTitle>Filled Card</CardTitle>
                 <CardDescription>This is a filled card variant</CardDescription>

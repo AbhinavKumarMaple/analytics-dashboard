@@ -9,7 +9,6 @@ import {
   DollarSign,
   AreaChart,
   TrendingUp,
-  ArrowUpRight,
   Users,
   Clock,
   Calendar,

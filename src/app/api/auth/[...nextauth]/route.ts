@@ -31,7 +31,7 @@ const users = [
   },
 ];
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -50,7 +50,7 @@ export const authOptions: NextAuthOptions = {
         // Check if user exists and password matches
         if (user && user.password === credentials.password) {
           // Return user without password
-          const { password, ...userWithoutPassword } = user;
+          const { password: _password, ...userWithoutPassword } = user;
           return userWithoutPassword as any;
         }
 

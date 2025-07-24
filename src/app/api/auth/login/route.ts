@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { User } from "@/types";
+
 import { sign } from "jsonwebtoken";
 
 // Validation schema for login request
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     // Check if user exists and password matches
     if (user && user.password === password) {
       // Create a user object without the password
-      const { password: _, ...userWithoutPassword } = user;
+      const { password: _password, ...userWithoutPassword } = user;
 
       // Create JWT token
       const token = sign(

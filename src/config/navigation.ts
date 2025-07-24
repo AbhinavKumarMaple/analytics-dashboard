@@ -1,13 +1,4 @@
-import {
-  LayoutDashboard,
-  LineChart,
-  Building,
-  Globe,
-  Settings,
-  Users,
-  HelpCircle,
-  Home,
-} from "lucide-react";
+import { Settings, HelpCircle, Home } from "lucide-react";
 
 export interface NavigationItem {
   id: string;

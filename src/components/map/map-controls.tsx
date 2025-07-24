@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { FilterOptions } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Check, ChevronDown, MapPin, X } from "lucide-react";
+import { MapPin, X } from "lucide-react";
 
 interface MapControlsProps {
   filters: FilterOptions;

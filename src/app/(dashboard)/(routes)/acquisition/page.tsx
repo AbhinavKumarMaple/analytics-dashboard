@@ -171,7 +171,7 @@ export default function AcquisitionPage() {
     setPagination((prev) => ({ ...prev, page }));
 
     fetchProperties(page, searchParams.toString());
-  }, [paramsStr]);
+  }, [paramsStr, searchParams]);
 
   const handlePageChange = (newPage: number) => {
     const params = new URLSearchParams(searchParams);

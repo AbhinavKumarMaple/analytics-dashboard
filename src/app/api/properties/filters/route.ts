@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import path from "path";
 import fs from "fs";
@@ -150,7 +150,7 @@ function extractRanges(properties: Property[]): Record<string, { min: number; ma
   return ranges;
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     console.log("Filters API request received");
 

@@ -3,7 +3,7 @@ import * as React from "react";
 import { Grid } from "@/components/ui/grid";
 import { KPICard } from "@/components/ui/kpi-card";
 import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
-import { Home, CheckCircle, DollarSign, AreaChart, TrendingUp, ArrowUpRight } from "lucide-react";
+import { Home, CheckCircle, DollarSign, AreaChart, TrendingUp } from "lucide-react";
 
 /**
  * Metrics Display component for showing KPI cards in a responsive grid
