@@ -78,7 +78,7 @@ export function HeroBanner({
       </h1>
 
       {subtitle && (
-        <p className="mt-3 line-clamp-2 max-w-3xl text-sm text-white opacity-90 sm:text-sm md:line-clamp-none md:text-lg lg:text-xl">
+        <p className="mt-3 line-clamp-1 max-w-3xl text-sm text-white opacity-90 sm:text-sm md:line-clamp-none md:text-lg lg:text-xl">
           {subtitle}
         </p>
       )}
@@ -95,7 +95,7 @@ export function HeroBanner({
   return (
     <div
       className={cn(
-        "flex aspect-[25/9] max-h-[400px] w-full flex-row overflow-hidden rounded-lg bg-cover bg-center text-white",
+        "flex aspect-[16/9] max-h-[400px] w-full flex-row overflow-hidden rounded-lg bg-cover bg-center p-6 text-white md:aspect-[25/9]",
         className
       )}
       style={{

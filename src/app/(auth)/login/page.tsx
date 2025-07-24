@@ -96,11 +96,11 @@ export default function LoginPage() {
   return (
     <div className=" flex min-h-screen items-center justify-center bg-white px-4 pb-12 pt-24 shadow-lg dark:bg-gray-800 sm:px-6 lg:px-8">
       <Card className="relative z-30 w-full max-w-md bg-white shadow-lg dark:bg-gray-700">
-        <CardHeader className="space-y-1 pb-6">
-          <CardTitle className="text-center text-2xl font-bold ">Welcome Back</CardTitle>
-          <CardDescription className="text-center ">
+        <CardHeader className="flex  space-y-1 pb-6">
+          <CardTitle className="w-full text-center text-2xl font-bold ">Welcome Back</CardTitle>
+          {/* <CardDescription className="text-center ">
             Sign in to your PANTHERA account
-          </CardDescription>
+          </CardDescription> */}
         </CardHeader>
         <CardContent className="px-6 pb-6">
           {authError && (
