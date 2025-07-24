@@ -140,13 +140,13 @@ const ChatbotWindow = ({
     const queryParams = new URLSearchParams();
     let hasFilter = false;
 
-    propertyFilters.forEach(({ key, regex }) => {
-      const match = text.match(regex);
-      if (match) {
-        queryParams.set(key.toLowerCase(), match[1].trim());
-        hasFilter = true;
-      }
-    });
+    // propertyFilters.forEach(({ key, regex }) => {
+    //   const match = text.match(regex);
+    //   if (match) {
+    //     queryParams.set(key.toLowerCase(), match[1].trim());
+    //     hasFilter = true;
+    //   }
+    // });
 
     if (pageMatch) {
       queryParams.set("page", pageMatch[1]);
@@ -155,12 +155,12 @@ const ChatbotWindow = ({
 
     if (hasFilter) {
       const filters: Record<string, string> = {};
-      propertyFilters.forEach(({ key, regex }) => {
-        const match = text.match(regex);
-        if (match) {
-          filters[key] = match[1].trim();
-        }
-      });
+      // propertyFilters.forEach(({ key, regex }) => {
+      //   const match = text.match(regex);
+      //   if (match) {
+      //     filters[key] = match[1].trim();
+      //   }
+      // });
 
       return {
         isFilterCommand: true,
@@ -187,22 +187,21 @@ const ChatbotWindow = ({
       "search",
       "filter",
     ];
-    const isPropertySearch = searchTerms.some((term) => text.toLowerCase().includes(term));
+    // const isPropertySearch = searchTerms.some((term) => text.toLowerCase().includes(term));
 
-    if (isPropertySearch) {
-      const filterExamples = propertyFilters
-        .map(({ key }) => `- Show properties in ${key.toLowerCase()}: [${key} name]`)
-        .join("\n");
-
-      throw new Error(
-        "I understand you're looking for properties! To help you better, please use one of these formats:\n\n" +
-          filterExamples +
-          "\n\n" +
-          "You can also:\n" +
-          "- Combine multiple filters (e.g., 'Show properties in city: Atlanta and state: Georgia')\n" +
-          "- Navigate pages (e.g., 'Take me to page 2')\n" +
-          "- Clear all filters (e.g., 'Clear filters' or 'Reset search')"
-      );
+    if (false) {
+      // const filterExamples = propertyFilters
+      //   .map(({ key }) => `- Show properties in ${key.toLowerCase()}: [${key} name]`)
+      //   .join("\n");
+      // throw new Error(
+      //   "I understand you're looking for properties! To help you better, please use one of these formats:\n\n" +
+      //     filterExamples +
+      //     "\n\n" +
+      //     "You can also:\n" +
+      //     "- Combine multiple filters (e.g., 'Show properties in city: Atlanta and state: Georgia')\n" +
+      //     "- Navigate pages (e.g., 'Take me to page 2')\n" +
+      //     "- Clear all filters (e.g., 'Clear filters' or 'Reset search')"
+      // );
     }
 
     return {
@@ -248,7 +247,7 @@ const ChatbotWindow = ({
           if (filters) {
             Object.entries(filters).forEach(([key, value]) => {
               const formattedValue = typeof value === "string" ? value.toLowerCase() : value;
-              queryParams.set(key, formattedValue);
+              queryParams.set(key, String(formattedValue));
             });
           }
           if (page) {
@@ -268,7 +267,14 @@ const ChatbotWindow = ({
       // Use the clean message without metadata
       const responseMessage = cleanMessage;
 
-      setMessages([...messagesWithUser, { type: "ai" as const, text: responseMessage, metadata }]);
+      setMessages([
+        ...messagesWithUser,
+        {
+          type: "ai" as const,
+          text: responseMessage,
+          metadata: metadata as Message["metadata"],
+        },
+      ]);
     } catch (error) {
       setMessages([
         ...messagesWithUser,

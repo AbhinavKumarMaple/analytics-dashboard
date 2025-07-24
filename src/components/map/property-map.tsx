@@ -2,14 +2,17 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Property, FilterOptions } from "@/types";
-import L, { DivIcon, LatLngBounds } from "leaflet";
+import L, { DivIcon, LatLngBounds, LatLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
+
+// Import leaflet-draw properly
 import "leaflet-draw";
 
 interface PropertyMapProps {
   properties: Property[];
   onPropertyClick?: (property: Property) => void;
+  onPolygonDraw?: (coordinates: LatLng[]) => void;
   filters?: FilterOptions;
   height?: string;
   className?: string;
@@ -23,6 +26,7 @@ export default function PropertyMap({
   enableDrawing = true,
   properties,
   onPropertyClick,
+  onPolygonDraw,
   filters,
   height = "600px",
   className = "",
@@ -188,7 +192,8 @@ export default function PropertyMap({
         drawnItemsRef.current = new L.FeatureGroup();
         mapInstanceRef.current.addLayer(drawnItemsRef.current);
 
-        const drawControl = new L.Control.Draw({
+        // Use the correct L.Control.Draw constructor
+        const drawControl = new (L.Control as any).Draw({
           draw: {
             polygon: true,
             marker: true,
@@ -214,14 +219,22 @@ export default function PropertyMap({
           });
         }
 
-        mapInstanceRef.current.on(L.Draw.Event.CREATED, (e) => {
-          const layer = (e as L.DrawEvents.Created).layer;
+        // Use the correct event names
+        mapInstanceRef.current.on("draw:created", (e: any) => {
+          const layer = e.layer;
           drawnItemsRef.current?.addLayer(layer);
+
+          // If it's a polygon, extract coordinates for callback
+          if (e.layerType === "polygon" && onPolygonDraw) {
+            const coordinates = layer.getLatLngs()[0];
+            onPolygonDraw(coordinates);
+          }
+
           saveDrawings();
         });
 
-        mapInstanceRef.current.on(L.Draw.Event.EDITED, saveDrawings);
-        mapInstanceRef.current.on(L.Draw.Event.DELETED, saveDrawings);
+        mapInstanceRef.current.on("draw:edited", saveDrawings);
+        mapInstanceRef.current.on("draw:deleted", saveDrawings);
 
         const clearControl = L.control({ position: "topright" });
         clearControl.onAdd = () => {
@@ -353,14 +366,7 @@ export default function PropertyMap({
         mapInstanceRef.current = null;
       }
     };
-  }, [
-    filteredProperties,
-    allCoordinates,
-    onPropertyClick,
-    groupColors,
-    enableDrawing,
-    getMarkerIcon,
-  ]);
+  }, [filteredProperties, allCoordinates, onPropertyClick, groupColors]);
 
   // Create legend component
   const Legend = () => {
