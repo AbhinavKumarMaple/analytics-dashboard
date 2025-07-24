@@ -12,11 +12,19 @@ interface ProtectedRouteProps {
  * A component that would normally protect routes by requiring authentication,
  * but for development purposes, it simply renders the children
  */
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  // We're using the auth context but not enforcing any restrictions
-  const { isLoading } = useAuth();
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-  // Show loading state while checking authentication
+export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, isLoading, router]);
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -28,6 +36,14 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     );
   }
 
-  // Always render children regardless of authentication status
+  if (!user) {
+    return null;
+  }
+
+  // Optional role check
+  if (requiredRole && user.role !== requiredRole) {
+    return <div>Access Denied</div>;
+  }
+
   return <>{children}</>;
 }

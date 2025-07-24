@@ -12,7 +12,7 @@ export const Breadcrumb: React.FC = () => {
   const getBreadcrumbItems = () => {
     const pathSegments = pathname.split("/").filter((segment) => segment !== "");
     let currentPath = "";
-    const items = [{ label: "Pages", href: "/dashboard" }]; // Base "Pages" link
+    const items = [{ label: "Pages", href: "/market" }]; // Base "Pages" link
 
     pathSegments.forEach((segment) => {
       currentPath += `/${segment}`;
@@ -46,9 +46,9 @@ export const Breadcrumb: React.FC = () => {
 
     // If no specific page is matched, default to Dashboard
     if (items.length === 1 && pathname === "/") {
-      items.push({ label: "Dashboard", href: "/dashboard" });
-    } else if (items.length === 1 && pathname === "/dashboard") {
-      items.push({ label: "Dashboard", href: "/dashboard" });
+      items.push({ label: "Dashboard", href: "/market" });
+    } else if (items.length === 1 && pathname === "/market") {
+      items.push({ label: "Dashboard", href: "/market" });
     }
 
     return items;

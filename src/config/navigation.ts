@@ -54,12 +54,12 @@ export const navigationItems: NavigationItem[] = [
         href: "/charts",
         // icon: LineChart,
       },
-      {
-        id: "properties",
-        label: "Properties",
-        href: "/properties",
-        // icon: Building,
-      },
+      // {
+      //   id: "properties",
+      //   label: "Properties",
+      //   href: "/properties",
+      //   // icon: Building,
+      // },
     ],
   },
 ];

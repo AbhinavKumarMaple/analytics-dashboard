@@ -134,13 +134,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ className }) => {
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 w-64 transform  bg-white shadow-sm transition-transform duration-300 ease-in-out dark:border-gray-700 dark:bg-gray-900 md:relative md:translate-x-0",
-        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
+        "fixed inset-y-0 -left-64 z-40 w-64 bg-white shadow-sm transition-all duration-300 ease-in-out dark:border-gray-700 dark:bg-gray-900",
+        isMobileMenuOpen ? "left-0" : "-left-64",
+        "md:sticky md:bottom-auto md:left-0 md:top-0 md:h-screen",
         className
       )}
     >
       <div className="flex h-16 items-center justify-center px-4 dark:border-gray-700">
-        <Link href="/dashboard" className="flex items-center">
+        <Link href="/market" className="flex items-center">
           {isDarkMode ? (
             <Image src={darklogo} alt="Panthera Logo" />
           ) : (

@@ -23,7 +23,7 @@ export function useDashboardMetrics(): UseDashboardMetricsResult {
     setError(null);
 
     try {
-      const response = await fetch("/api/dashboard");
+      const response = await fetch("/api/market");
 
       if (!response.ok) {
         throw new Error(`Failed to fetch dashboard metrics: ${response.status}`);

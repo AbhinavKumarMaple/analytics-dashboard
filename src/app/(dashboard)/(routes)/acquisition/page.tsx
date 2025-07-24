@@ -7,7 +7,15 @@ import { KPICard } from "@/components/ui/kpi-card";
 import dynamic from "next/dynamic";
 import { Property } from "@/types";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DollarSign, Home, Users, Ruler, ChevronDown } from "lucide-react";
+import {
+  DollarSign,
+  Home,
+  Users,
+  Ruler,
+  ChevronDown,
+  ChevronUp,
+  ChevronsUpDown,
+} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 // Define interface for API property data
@@ -46,6 +54,12 @@ interface ActiveFilters {
   City?: string;
   State?: string;
   Zipcode?: string;
+}
+
+// Define interface for sorting
+interface SortConfig {
+  key: string;
+  direction: "asc" | "desc";
 }
 
 // FilterCard component for individual filter cards
@@ -128,6 +142,7 @@ export default function AcquisitionPage() {
     },
   });
   const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -207,6 +222,55 @@ export default function AcquisitionPage() {
     }
 
     router.replace(`?${queryParams.toString()}`, { scroll: false });
+  };
+
+  // Handle sorting
+  const handleSort = (key: string) => {
+    let direction: "asc" | "desc" = "asc";
+
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+
+    setSortConfig({ key, direction });
+  };
+
+  // Sort the properties based on current sort config
+  const sortedProperties = React.useMemo(() => {
+    if (!sortConfig) return apiProperties;
+
+    return [...apiProperties].sort((a, b) => {
+      const aValue = a[sortConfig.key as keyof ApiProperty];
+      const bValue = b[sortConfig.key as keyof ApiProperty];
+
+      // Handle numeric sorting for price and sqft
+      if (sortConfig.key === "Homesite Price" || sortConfig.key === "Homesite Sq.Ft.") {
+        const aNum = parseInt(aValue || "0");
+        const bNum = parseInt(bValue || "0");
+        return sortConfig.direction === "asc" ? aNum - bNum : bNum - aNum;
+      }
+
+      // Handle string sorting
+      const aStr = (aValue || "").toString().toLowerCase();
+      const bStr = (bValue || "").toString().toLowerCase();
+
+      if (aStr < bStr) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aStr > bStr) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  }, [apiProperties, sortConfig]);
+
+  // Get sort icon for column headers
+  const getSortIcon = (columnKey: string) => {
+    if (!sortConfig || sortConfig.key !== columnKey) {
+      return <ChevronsUpDown className="ml-1 h-4 w-4 text-gray-400" />;
+    }
+
+    return sortConfig.direction === "asc" ? (
+      <ChevronUp className="ml-1 h-4 w-4 text-gray-600" />
+    ) : (
+      <ChevronDown className="ml-1 h-4 w-4 text-gray-600" />
+    );
   };
 
   // Modified fetchProperties to accept query string and handle coordinates
@@ -485,39 +549,83 @@ export default function AcquisitionPage() {
                 <tr>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("MPC")}
                   >
-                    MPC
+                    <div className="flex items-center">
+                      MPC
+                      {getSortIcon("MPC")}
+                    </div>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("Community")}
                   >
-                    Community
+                    <div className="flex items-center">
+                      Community
+                      {getSortIcon("Community")}
+                    </div>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("City")}
                   >
-                    City
+                    <div className="flex items-center">
+                      City
+                      {getSortIcon("City")}
+                    </div>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("State")}
                   >
-                    State
+                    <div className="flex items-center">
+                      State
+                      {getSortIcon("State")}
+                    </div>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("Homesite Price")}
                   >
-                    Price
+                    <div className="flex items-center">
+                      Price
+                      {getSortIcon("Homesite Price")}
+                    </div>
                   </th>
                   <th
                     scope="col"
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider dark:bg-gray-700 dark:text-white"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("Homesite Sq.Ft.")}
                   >
-                    Sq. Ft.
+                    <div className="flex items-center">
+                      Sq. Ft.
+                      {getSortIcon("Homesite Sq.Ft.")}
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("Zipcode")}
+                  >
+                    <div className="flex items-center">
+                      Zipcode
+                      {getSortIcon("Zipcode")}
+                    </div>
+                  </th>
+                  <th
+                    scope="col"
+                    className="cursor-pointer px-6 py-3 text-left text-xs font-medium uppercase tracking-wider hover:bg-gray-50 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    onClick={() => handleSort("Plan URL")}
+                  >
+                    <div className="flex items-center">
+                      Plan URL
+                      {getSortIcon("Plan URL")}
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -530,8 +638,8 @@ export default function AcquisitionPage() {
                       </div>
                     </td>
                   </tr>
-                ) : apiProperties.length > 0 ? (
-                  apiProperties.map((property, index) => (
+                ) : sortedProperties.length > 0 ? (
+                  sortedProperties.map((property, index) => (
                     <tr
                       key={index}
                       className="bg-white text-black hover:bg-gray-50 dark:bg-gray-700 dark:text-white"
@@ -547,6 +655,10 @@ export default function AcquisitionPage() {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         {property["Homesite Sq.Ft."]}
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm">{property.Zipcode}</td>
+                      <td className="whitespace-nowrap px-6 py-4 text-sm">
+                        {property["Plan URL"]}
                       </td>
                     </tr>
                   ))

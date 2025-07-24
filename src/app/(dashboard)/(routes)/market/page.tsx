@@ -53,8 +53,10 @@ export default function MarketPage() {
                 {/* Grid container with custom column widths */}
                 <div className="grid w-full grid-cols-[1fr_auto]">
                   {/* Header row */}
-                  <div className="border-b px-8 py-2 font-medium text-[#A3AED0]">MSA</div>
-                  <div className="whitespace-nowrap border-b px-8 py-2 font-bold text-[#A3AED0]">
+                  <div className="border-b px-8 py-2 font-medium text-[#A3AED0] dark:border-gray-600">
+                    MSA
+                  </div>
+                  <div className="whitespace-nowrap border-b px-8 py-2 font-bold text-[#A3AED0] dark:border-gray-600">
                     Homes Closed
                   </div>
 
